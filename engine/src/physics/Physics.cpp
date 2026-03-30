@@ -1,4 +1,6 @@
 #include "nebula/physics/Physics.h"
+#include "nebula/events/EventBus.h"
+#include "nebula/events/Events.h"
 #include <algorithm>
 #include <cmath>
 
@@ -48,7 +50,13 @@ namespace nebula
                 AABB aabb_b = getAABB(tb, cb);
                 glm::vec2 pen;
                 if (overlaps(aabb_a, aabb_b, pen))
+                {
                     resolve(ta, ra, tb, rb, pen);
+                    glm::vec2 normal = pen;
+                    if (glm::length(normal) > 0.0f)
+                        normal = glm::normalize(normal);
+                    EventBus::defer(CollisionEvent{ea, eb, normal});
+                }
             }
         }
     }

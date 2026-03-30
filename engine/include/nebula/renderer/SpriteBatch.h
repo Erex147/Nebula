@@ -41,6 +41,10 @@ namespace nebula
                         float u0, float v0, float u1, float v1,
                         const glm::vec4 &color = glm::vec4(1.0f));
 
+        // draw a solid colored quad — no texture lookup
+        void drawColorQuad(float x, float y, float w, float h,
+                           const glm::vec4 &color);
+
         // Send everything queued this frame to the GPU
         void flush();
 

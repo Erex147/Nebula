@@ -25,3 +25,6 @@ Makefile
 
 # vcpkg installed packages (toolchain is enough)
 vcpkg_installed/
+
+# Claude Files
+CLAUDE.md

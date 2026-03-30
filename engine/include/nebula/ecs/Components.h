@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include "nebula/renderer/Texture.h"
+#include "nebula/renderer/Animator.h"
 
 namespace nebula
 {
@@ -44,6 +45,12 @@ namespace nebula
     {
         glm::vec2 size = {64.0f, 64.0f}; // full width/height
         glm::vec2 offset = {0.0f, 0.0f};
+    };
+
+    // add to the components at the bottom of Components.h:
+    struct AnimatorComponent
+    {
+        Animator animator;
     };
 
 } // namespace nebula

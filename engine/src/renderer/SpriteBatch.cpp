@@ -99,6 +99,23 @@ namespace nebula
         m_quadCount++;
     }
 
+    void SpriteBatch::drawColorQuad(float x, float y, float w, float h,
+                                    const glm::vec4 &color)
+    {
+        if (m_quadCount >= MAX_QUADS)
+            flushInternal();
+
+        // slot 0 is always the white texture
+        float ti = getOrAddTexture(m_whiteTexID);
+        uint32_t base = m_quadCount * 4;
+
+        glm::vec2 p[4] = {{x, y}, {x + w, y}, {x + w, y + h}, {x, y + h}};
+        glm::vec2 uv[4] = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
+        for (int i = 0; i < 4; i++)
+            m_vertices[base + i] = {p[i], uv[i], color, ti};
+        m_quadCount++;
+    }
+
     void SpriteBatch::flush()
     {
         flushInternal();

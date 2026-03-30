@@ -12,8 +12,15 @@ public:
     void move(const glm::vec2& delta);
     void setZoom(float zoom);
     void zoomBy(float factor);
+    glm::vec2 screenToWorld(const glm::vec2 &screenPos,
+                            const glm::vec2 &screenSize,
+                            bool originTopLeft = true) const;
+    glm::vec2 worldToScreen(const glm::vec2 &worldPos,
+                            const glm::vec2 &screenSize,
+                            bool originTopLeft = true) const;
 
     const glm::mat4& viewProjection() const { return m_vp; }
+    const glm::mat4& inverseViewProjection() const { return m_invVP; }
     const glm::vec2& position()       const { return m_position; }
     float            zoomLevel()      const { return m_zoom; }
 
@@ -21,6 +28,7 @@ private:
     glm::mat4 m_projection = glm::mat4(1.0f);
     glm::mat4 m_view       = glm::mat4(1.0f);
     glm::mat4 m_vp         = glm::mat4(1.0f);
+    glm::mat4 m_invVP      = glm::mat4(1.0f);
     glm::vec2 m_position   = {0.0f, 0.0f};
     float     m_zoom       = 1.0f;
 

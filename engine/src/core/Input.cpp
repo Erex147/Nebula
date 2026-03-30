@@ -1,4 +1,6 @@
 #include "nebula/core/Input.h"
+#include "nebula/events/EventBus.h"
+#include "nebula/events/Events.h"
 #include <GLFW/glfw3.h>
 
 namespace nebula {
@@ -38,17 +40,28 @@ void Input::endFrame() {
 
 void Input::cbKey(GLFWwindow*, int k, int, int action, int) {
     if (k >= 0 && k < KEY_COUNT)
+    {
         s_keysCur[k] = (action != GLFW_RELEASE);
+        if (action == GLFW_PRESS)
+            EventBus::defer(KeyPressedEvent{k});
+        else if (action == GLFW_RELEASE)
+            EventBus::defer(KeyReleasedEvent{k});
+    }
 }
 void Input::cbBtn(GLFWwindow*, int b, int action, int) {
     if (b >= 0 && b < BTN_COUNT)
+    {
         s_btnCur[b] = (action != GLFW_RELEASE);
+        if (action == GLFW_PRESS)
+            EventBus::defer(MouseClickEvent{s_mousePos.x, s_mousePos.y, b});
+    }
 }
 void Input::cbCursor(GLFWwindow*, double x, double y) {
     s_mousePos = {(float)x, (float)y};
 }
 void Input::cbScroll(GLFWwindow*, double, double y) {
     s_scrollY = (float)y;
+    EventBus::defer(MouseScrollEvent{(float)y});
 }
 
 } // namespace nebula
