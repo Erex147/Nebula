@@ -1,0 +1,27 @@
+# Build output
+build/
+bin/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+Makefile
+
+# Compiled output
+*.o
+*.a
+*.dylib
+*.so
+*.exe
+
+# IDE files
+.vscode/
+.idea/
+*.xcodeproj/
+*.xcworkspace/
+.DS_Store
+
+# vcpkg installed packages (toolchain is enough)
+vcpkg_installed/
