@@ -1,4 +1,5 @@
 #include "nebula/renderer/Tilemap.h"
+#include <algorithm>
 
 namespace nebula
 {
@@ -26,16 +27,17 @@ namespace nebula
         if (!m_atlas)
             return;
 
-        // how many rows of tiles in the atlas
-        int atlasRows = 1;
-        if (m_atlasColumns > 0)
-        {
-            // figure out from texture size if needed — or just let it wrap
-            atlasRows = m_atlas->height() / m_tileH;
-        }
+        if (m_atlasColumns <= 0)
+            return;
+
+        const float atlasTileW = (float)m_atlas->width() / (float)m_atlasColumns;
+        const int atlasRows = std::max(1, (int)(m_atlas->height() / atlasTileW));
+        const float atlasTileH = (float)m_atlas->height() / (float)atlasRows;
 
         float invW = 1.0f / (float)m_atlas->width();
         float invH = 1.0f / (float)m_atlas->height();
+        const float insetU = 0.5f * invW;
+        const float insetV = 0.5f * invH;
 
         for (int row = 0; row < m_mapH; row++)
         {
@@ -51,10 +53,10 @@ namespace nebula
                 // UV region for this tile id
                 int tileCol = id % m_atlasColumns;
                 int tileRow = id / m_atlasColumns;
-                float u0 = (tileCol * m_tileW) * invW;
-                float v0 = (tileRow * m_tileH) * invH;
-                float u1 = ((tileCol + 1) * m_tileW) * invW;
-                float v1 = ((tileRow + 1) * m_tileH) * invH;
+                float u0 = (tileCol * atlasTileW) * invW + insetU;
+                float v0 = (tileRow * atlasTileH) * invH + insetV;
+                float u1 = ((tileCol + 1) * atlasTileW) * invW - insetU;
+                float v1 = ((tileRow + 1) * atlasTileH) * invH - insetV;
 
                 batch.drawRegion(*m_atlas,
                                  px, py, (float)m_tileW, (float)m_tileH,

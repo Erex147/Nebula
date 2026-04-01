@@ -6,6 +6,17 @@
 namespace nebula
 {
 
+    void DebugOverlay::setEnabled(bool enabled)
+    {
+        m_enabled = enabled;
+        visible = enabled;
+        if (!m_enabled)
+        {
+            m_lines.clear();
+            m_stats.clear();
+        }
+    }
+
     void DebugOverlay::init(const std::string &fontPath, int w, int h)
     {
         init(std::make_shared<FontRenderer>(fontPath, 18), w, h);
@@ -23,10 +34,10 @@ namespace nebula
 
     void DebugOverlay::beginFrame()
     {
-        if (!m_font)
-            return; // <-- add guard here too
-
         m_lines.clear();
+
+        if (!m_enabled || !m_font)
+            return;
 
         double now = glfwGetTime();
         float dt = (float)(now - m_lastTime);
@@ -44,8 +55,16 @@ namespace nebula
 
     void DebugOverlay::endFrame(SpriteBatch &batch)
     {
+        if (!m_enabled)
+        {
+            m_stats.clear();
+            return;
+        }
         if (!visible || !m_font)
-            return; // <-- add !m_font guard
+        {
+            m_stats.clear();
+            return;
+        }
 
         batch.begin(m_camera->viewProjection());
 
@@ -82,11 +101,15 @@ namespace nebula
 
     void DebugOverlay::print(const std::string &text)
     {
+        if (!m_enabled)
+            return;
         m_lines.push_back(text);
     }
 
     void DebugOverlay::setStat(const std::string &k, const std::string &v)
     {
+        if (!m_enabled)
+            return;
         m_stats.push_back({k, v});
     }
     void DebugOverlay::setStat(const std::string &k, float v)

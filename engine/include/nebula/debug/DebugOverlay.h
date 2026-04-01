@@ -19,6 +19,8 @@ namespace nebula
                   int screenW, int screenH);
         void init(std::shared_ptr<FontRenderer> font,
                   int screenW, int screenH);
+        void setEnabled(bool enabled);
+        bool enabled() const { return m_enabled; }
 
         // call at start of frame
         void beginFrame();
@@ -51,6 +53,7 @@ namespace nebula
         double m_lastTime = 0;
         int m_screenW = 0;
         int m_screenH = 0;
+        bool m_enabled = true;
     };
 
 } // namespace nebula

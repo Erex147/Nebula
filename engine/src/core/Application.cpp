@@ -15,8 +15,31 @@ namespace nebula
         s_instance = this;
         m_window = std::make_unique<Window>(cfg);
         Input::init(m_window->handle());
+        m_debug.setEnabled(false);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    void Application::installDebugOverlay()
+    {
+        m_debug.setEnabled(true);
+    }
+
+    void Application::removeDebugOverlay()
+    {
+        m_debug.setEnabled(false);
+    }
+
+    void Application::installDeveloperTools()
+    {
+        if (m_devTools)
+            return;
+        m_devTools = std::make_unique<DeveloperTools>();
+    }
+
+    void Application::removeDeveloperTools()
+    {
+        m_devTools.reset();
     }
 
     // engine/src/core/Application.cpp
@@ -37,8 +60,20 @@ namespace nebula
                 m_window->toggleFullscreen();
             m_ui.beginFrame(*m_window);
             EventBus::flushDeferred();
-            m_scenes.update(dt);
+
+            if (m_devTools)
+            {
+                m_devTools->beginFrame(dt, *m_window, hasDebugOverlay() ? &m_debug : nullptr, m_scenes);
+                if (m_devTools->shouldUpdateSimulation())
+                    m_scenes.update(m_devTools->simulationDeltaTime());
+            }
+            else
+            {
+                m_scenes.update(dt);
+            }
             m_scenes.draw();
+            if (m_devTools)
+                m_devTools->draw(m_ui, *m_window, m_scenes);
             if (m_debugBatch)
                 m_ui.render(*m_debugBatch);
             if (m_debugBatch)

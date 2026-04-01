@@ -17,6 +17,7 @@ add_library(nebula STATIC
     src/physics/Physics.cpp
     src/scene/SceneManager.cpp
     src/debug/DebugOverlay.cpp
+    src/debug/DeveloperTools.cpp
     src/audio/AudioManager.cpp
     src/ui/UILayer.cpp
     src/gfx/Framebuffer.cpp

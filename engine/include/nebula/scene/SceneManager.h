@@ -27,6 +27,8 @@ namespace nebula
 
         Scene *top() const;
         bool empty() const { return m_stack.empty(); }
+        size_t stackSize() const { return m_stack.size(); }
+        size_t pendingCount() const { return m_pending.size(); }
 
         // apply any pending push/pop operations
         // called once per frame after update+draw
